@@ -100,7 +100,7 @@ jobs:
 
       - name: Crear carpeta de release y copiar artefactos
         run: |
-          mikdir -p release cp -r src/* release/
+          mkdir -p release cp -r src/* release/
 
       - name: Confirmar despliegue
         run: echo "Despliegue exitoso"
