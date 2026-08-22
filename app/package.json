@@ -1,0 +1,17 @@
+{
+  "name": "clickmarket-catalogo-api",
+  "version": "1.0.0",
+  "description": "API mínima de catálogo de productos para ClickMarket Perú - reto Sesión 2 (Pipelines automatizados)",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "node --check src/index.js && node --check src/catalogo.js && echo 'Compilación OK: sin errores de sintaxis'",
+    "start": "node src/index.js",
+    "test": "jest --colors"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
