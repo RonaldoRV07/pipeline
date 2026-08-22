@@ -1,0 +1,107 @@
+# =============================================================================
+# RETO - Sesión 2 - Construcción de pipelines automatizados
+# ClickMarket Perú - Catálogo API
+#
+# Acabas de ver al docente construir en vivo el pipeline de LogiExpress.
+# Ahora te toca a ti: completa las secciones marcadas con "# completar aquí"
+# para que este pipeline ejecute las 3 etapas: compilación, pruebas
+# automatizadas y despliegue simulado.
+#
+# Pista: la estructura es la misma que viste en la demo, pero el despliegue
+# de este caso es un poco distinto (lee bien el paso 3 más abajo antes de
+# copiar literalmente lo que hizo el docente).
+#
+# ¿Sintaxis nueva que no recuerdas? Revisa docs/guia_rapida_sintaxis.md.
+# =============================================================================
+
+name: CI - ClickMarket Catálogo API
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # ETAPA 1: COMPILACIÓN (build)
+  # Ya está completa como referencia. Instala dependencias y valida que el
+  # código no tenga errores de sintaxis (equivalente a "compilar" en JS).
+  # ---------------------------------------------------------------------------
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - name: Descargar código del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Compilar (validar sintaxis)
+        run: npm run build
+
+ # ---------------------------------------------------------------------------
+  # ETAPA 2: PRUEBAS AUTOMATIZADAS (test)
+  # Completa este job para que:
+  #   1) Dependa de que "build" haya terminado con éxito.
+  #   2) Descargue el código y configure Node.js (igual que en "build").
+  #   3) Instale dependencias.
+  #   4) Ejecute las pruebas unitarias con Jest (npm test).
+  # ---------------------------------------------------------------------------
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - name: Descargar código del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Ejecutar pruebas automatizadas
+        run: npm test
+
+  # ---------------------------------------------------------------------------
+  # ETAPA 3: DESPLIEGUE SIMULADO (deploy)
+  # A diferencia de la demo (que copiaba a una carpeta "staging"), ClickMarket
+  # quiere que su carpeta de despliegue se llame "release" (así lo pidió el
+  # cliente en el caso). Completa este job para que:
+  #   1) Solo se ejecute si "test" terminó con éxito.
+  #   2) Descargue el código del repositorio.
+  #   3) Cree una carpeta "release" (NO "staging") y copie dentro los
+  #      archivos de "app/src".
+  #   4) Imprima en consola el mensaje "Despliegue exitoso".
+  # ---------------------------------------------------------------------------
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - name: Descargar código del repositorio
+        uses: actions/checkout@v4
+
+      - name: Crear carpeta de release y copiar artefactos
+        run: |
+          mikdir -p release cp -r src/* release/
+
+      - name: Confirmar despliegue
+        run: echo "Despliegue exitoso"
+
